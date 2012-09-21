@@ -90,13 +90,11 @@ __{ARCHIVE}/cfg/cfg.d/eprint_fields_automatic.pl__
       "/cgi/oai2?verb=GetRecord&metadataPrefix=oai_dc&identifier=oai:".
       $c->{oai}->{v2}->{archive_id}.":".$eprint->id;
       my ($ret, $status) = EPrints::NBN::Webservice::mint( $eprint->get_url(), $metadataurl );
-      if ($ret eq '500') {
+      if ($ret eq '201') {
+        $eprint->set_value("nbn", $status->{'nbn'});
+      } else {
         $eprint->set_value("nbnlog", $status->{'status'});
         $eprint->set_value("nbncheck", "FALSE");
-      } elsif ($ret eq '201') {
-        $eprint->set_value("nbn", $status->{'nbn'});
-      } elsif ($ret eq '400') {
-        $eprint->set_value("nbn", $status->{'nbn'});
       }
     }
   }
